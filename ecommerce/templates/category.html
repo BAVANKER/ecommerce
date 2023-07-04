@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+<!--category-product page-->
+{% block metadescription %}
+    {% if category %}
+        {{category.description|truncatewords:155}}
+    {% else %}
+        welcome to ABC where you can buy different items...
+    {% endif %}
+{% endblock %}
+{% block title %}
+    {% if category %}
+        {{category.name}}-ABC store
+    {% else %}
+        See our New collections- ABC store
+    {% endif %}
+{% endblock %}
+{% block content %}
+<!--category page heading section-->
+{% if category %}
+<div class="row my-row-class">
+    <div class="mx-auto">
+        <div>
+            <p><a href="{% url 'shop:allProdCat' %}">Our Product Collection</a></p>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!--category-product page-->
+
+{% if category %}
+<div class="mx-auto">
+    <img class="my-image" src="{{ category.image.url }}" width="250px" height="250" alt="{{category.name}}">
+</div><br>
+<div>
+    <h1 class="text-center my-title">{{category.name}}</h1>
+    <p class="justify">{{category.description}}</p>
+</div>
+
+<!--category only page-->
+
+{% else %}
+<div>
+    <img class="my-image my-image-padding" src="{% static 'img/banner.jpg' %}" width="100%" height="300" alt="Our Products">
+</div><br>
+<div>
+    <h1 class="text-center my-title">Our Product Collection</h1>
+    <p class="text-justify">Even though this might be true, the effect that the final project will produce on the client won’t be as satisfactory as in the case of one with included filler content. A dummy text generator gives web designers the content they need. Then, they can use the typefaces and layout they prefer, thus obtaining the best mock-up of their work. It would be best to be impossible to understand and read because people might get distracted by the text itself and its nonsense rather than analyzing how the typefaces integrate into the design instead.</p>
+</div>
+{% endif %}
+
+<!--iterative cards-->
+
+<div class="container">
+    <div class="row mx-auto">
+        {% for product in products %}
+        <div class="my-bottom-margin col-9 col-sm-4 col-md-4 col-lg-4">
+            <div class="card text-center" style="min-width:18rem">
+                <a href="{{ product.get_url}}">
+                    <img class="card-img-top my-image" src="{{ product.image.url }}" alt="{{product.name}}">
+                </a>
+                <div class="card-body">
+                    <h4>{{product.name}}</h4>
+                    <p> ₹ {{product.price}} only</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!--page number section-->
+
+<div class="mx-auto">{% if products.paginator.num_pages > 1 %}<hr>
+    <div class="text-center">{% for pg in products.paginator.page_range %}
+        <a href="?page={{pg}}" class="btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+        {% endfor %}
+    </div>
+        {% endif %}
+</div>
+{% endblock %}
